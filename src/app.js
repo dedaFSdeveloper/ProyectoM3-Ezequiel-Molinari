@@ -11,7 +11,7 @@ function renderHome() {
 function renderChat() {
   document.getElementById('app').innerHTML = `
     <h1>Chat con ${personaje}</h1>
-    <button data-path="navigateTo('/home')">Volver</button>
+    <button data-path="/home">Volver</button>
   `
 }
 
@@ -24,6 +24,8 @@ function renderRoute() {
   const path = window.location.pathname
   if (path === '/chat') {
     renderChat()
+  } else if (path === '/about') {
+    renderAbout()
   } else {
     renderHome()
   }
@@ -34,5 +36,18 @@ document.getElementById('app').addEventListener('click', (event) => {
     navigateTo(event.target.dataset.path)
   }
 })
+
+window.addEventListener('popstate', renderRoute)
+
+function renderAbout(){
+document.getElementById("app").innerHTML = `
+<h1>Chat de Ia Con Diferentes Personajes</h1>
+<h2>Chatea con Walter White - Jack Sparrow - Sherlock Holmes</h2>
+<p>By Ezequiel Molinari</p>
+<button data-path="/home">Volver al inicio</button>
+<button data-path="/about">Sobre el proyecto</button>
+`
+}
+
 
 renderRoute()
