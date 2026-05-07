@@ -36,13 +36,36 @@ function renderMensaje() {
   `).join('')
 }
 
-function sendMessage() {
+async function sendMessage() {
   const input = document.getElementById('user-input')
   const text = input.value.trim()
   if (!text) return
+
   mensaje.push({ role: 'user', content: text })
   input.value = ''
   renderMensaje()
+
+  mensaje.push({ role: 'assistant', content: '...' })
+  renderMensaje()
+
+try {
+  const mensajesLimpios = mensaje.filter(m => m.content !== '...')
+  
+  const response = await fetch('/api/functions', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ messages: mensajesLimpios })
+  })
+
+    const data = await response.json()
+    
+    mensaje[mensaje.length - 1].content = data.content
+    renderMensaje()
+
+  } catch (error) {
+    mensaje[mensaje.length - 1].content = 'Error al conectar con la IA.'
+    renderMensaje()
+  }
 }
 
 function navigateTo(path) {
