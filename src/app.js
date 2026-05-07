@@ -34,6 +34,11 @@ function renderMensaje() {
       <p>${msg.content}</p>
     </div>
   `).join('')
+  container.scrollTop = container.scrollHeight
+  
+document.getElementById('user-input').addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') sendMessage()
+})
 }
 
 async function sendMessage() {
