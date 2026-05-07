@@ -30,10 +30,19 @@ function renderChat() {
 function renderMensaje() {
   const container = document.getElementById('messages')
   container.innerHTML = mensaje.map(msg => `
-    <div class="mensaje ${msg.role}">
+    <div class="message ${msg.role}">
       <p>${msg.content}</p>
     </div>
   `).join('')
+}
+
+function sendMessage() {
+  const input = document.getElementById('user-input')
+  const text = input.value.trim()
+  if (!text) return
+  mensaje.push({ role: 'user', content: text })
+  input.value = ''
+  renderMensaje()
 }
 
 function navigateTo(path) {
@@ -62,15 +71,9 @@ function renderAbout() {
 }
 
 document.getElementById('app').addEventListener('click', (event) => {
-  if (event.target.dataset.path) {
-    navigateTo(event.target.dataset.path)
-  }
+  if (event.target.dataset.path) navigateTo(event.target.dataset.path)
+  if (event.target.id === 'send-btn') sendMessage()
 })
 
 window.addEventListener('popstate', renderRoute)
-
-// TEST TEMPORAL - lo borramos después
-mensaje.push({ role: 'user', content: 'Hola Walter' })
-mensaje.push({ role: 'assistant', content: 'De qué querés hablar' })
-
 renderRoute()
