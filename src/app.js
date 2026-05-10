@@ -1,4 +1,28 @@
-const personaje = 'Walter White'
+const personajes = [
+  {
+    id: 'walter',
+    nombre: 'Walter White',
+    serie: 'Breaking Bad',
+    descripcion: 'Químico · El mejor en lo suyo',
+    prompt: `Sos Walter White de Breaking Bad. Hablás con arrogancia y superioridad intelectual. Tenés conocimiento profundo de química. Nunca admitís estar equivocado. Te referís a vos mismo como el mejor en lo suyo. Das respuestas cortas como en un chat. Hablás en español.`
+  },
+  {
+    id: 'sherlock',
+    nombre: 'Sherlock Holmes',
+    serie: 'Sherlock BBC',
+    descripcion: 'Detective · Mente brillante · Condescendiente',
+    prompt: `Sos Sherlock Holmes. Hablás de forma señorial y condescendiente. Deducís cosas del interlocutor constantemente. Considerás a casi todos inferiores intelectualmente. Das respuestas cortas y directas. Hablás en español.`
+  },
+  {
+    id: 'sparrow',
+    nombre: 'Jack Sparrow',
+    serie: 'Piratas del Caribe',
+    descripcion: 'Pirata · Impredecible · Gracioso',
+    prompt: `Sos Jack Sparrow de Piratas del Caribe. Hablás de forma errática e impredecible. Sos gracioso y sarcástico. Hacés referencias al ron y al mar. A veces terminás frases con "savvy?". Das respuestas cortas y divertidas. Hablás en español.`
+  }
+]
+
+let personajeActual = personajes[0]
 const mensaje = []
 
 function navbar() {
@@ -18,13 +42,14 @@ function renderHome() {
   document.getElementById('app').innerHTML = `
     ${navbar()}
     <div class="home-container">
-      <h1>IA Chat</h1>
-      <p>Chateá con tus personajes favoritos usando inteligencia artificial</p>
-      <div class="character-card">
-        <h2>Walter White</h2>
-        <p>Breaking Bad • Químico • El mejor en lo suyo</p>
-      </div>
-      <button class="btn-primary" data-path="/chat">Empezar a chatear</button>
+      <h1>AI Chat</h1>
+      <p>Elegí un personaje y empezá a chatear</p>
+      ${personajes.map(p => `
+        <div class="character-card" data-id="${p.id}">
+          <h2>${p.nombre}</h2>
+          <p>${p.serie} · ${p.descripcion}</p>
+        </div>
+      `).join('')}
     </div>
   `
 }
@@ -33,7 +58,7 @@ function renderChat() {
   document.getElementById('app').innerHTML = `
     <div class="chat-container">
       <div class="chat-header">
-        <h2>Chat con ${personaje}</h2>
+        <h2>${personajeActual.nombre}</h2>
         <button data-path="/home">Volver</button>
       </div>
       <div class="chat-messages" id="messages"></div>
@@ -44,7 +69,6 @@ function renderChat() {
     </div>
   `
   renderMensaje()
-
   document.getElementById('user-input').addEventListener('keypress', (e) => {
     if (e.key === 'Enter') sendMessage()
   })
@@ -122,7 +146,16 @@ function renderRoute() {
 document.getElementById('app').addEventListener('click', (event) => {
   if (event.target.dataset.path) navigateTo(event.target.dataset.path)
   if (event.target.id === 'send-btn') sendMessage()
+  
+  const card = event.target.closest('[data-id]')
+  if (card) {
+    const seleccionado = personajes.find(p => p.id === card.dataset.id)
+    if (seleccionado) {
+      personajeActual = seleccionado
+      mensaje.length = 0
+      navigateTo('/chat')
+    }
+  }
 })
-
 window.addEventListener('popstate', renderRoute)
 renderRoute()
