@@ -1,7 +1,7 @@
 {
+  "outputDirectory": "src",
   "routes": [
-    { "src": "/api/(.*)", "dest": "/api/functions.js" },
-    { "src": "/src/(.*)", "dest": "/src/$1" },
-    { "src": "/(.*)", "dest": "/src/index.html" }
+    { "src": "/api/(.*)", "dest": "/api/$1" },
+    { "src": "/(.*)", "dest": "/$1" }
   ]
 }
