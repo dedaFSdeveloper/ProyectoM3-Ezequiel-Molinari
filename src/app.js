@@ -1,3 +1,5 @@
+import { formatMessage, isEmptyMessage, parseAIResponse, limitMessages } from './utils.js'
+
 const personajes = [
   {
     id: 'walter',
@@ -76,28 +78,39 @@ function renderChat() {
 
 function renderMensaje() {
   const container = document.getElementById('messages')
-  container.innerHTML = mensaje.map(msg => `
-    <div class="message ${msg.role} ${msg.content === '...' ? 'typing' : ''}">
-      <p>${msg.content}</p>
-    </div>
-  `).join('')
+  container.innerHTML = mensaje.map(msg => {
+    if (msg.content === '...') {
+      return `
+        <div class="message assistant">
+          <div class="typing-indicator">
+            <span></span><span></span><span></span>
+          </div>
+        </div>
+      `
+    }
+    return `
+      <div class="message ${msg.role}">
+        <p>${msg.content}</p>
+      </div>
+    `
+  }).join('')
   container.scrollTop = container.scrollHeight
 }
 
 async function sendMessage() {
   const input = document.getElementById('user-input')
   const text = input.value.trim()
-  if (!text) return
+  if (isEmptyMessage(text)) return
 
-  mensaje.push({ role: 'user', content: text })
+  mensaje.push(formatMessage('user', text))
   input.value = ''
   renderMensaje()
 
-  mensaje.push({ role: 'assistant', content: '...' })
+  mensaje.push(formatMessage('assistant', '...'))
   renderMensaje()
 
   try {
-    const mensajesLimpios = mensaje.filter(m => m.content !== '...')
+    const mensajesLimpios = limitMessages(mensaje.filter(m => m.content !== '...'))
 
     const response = await fetch('/api/functions', {
       method: 'POST',
@@ -109,7 +122,7 @@ async function sendMessage() {
     })
 
     const data = await response.json()
-    mensaje[mensaje.length - 1].content = data.content
+    mensaje[mensaje.length - 1].content = parseAIResponse(data) || data.content
     renderMensaje()
 
   } catch (error) {
