@@ -1,12 +1,31 @@
 const personaje = 'Walter White'
 const mensaje = []
 
+function navbar() {
+  return `
+    <nav>
+      <span class="logo">IA Chat</span>
+      <div class="nav-links">
+        <button data-path="/home">Inicio</button>
+        <button data-path="/chat">Chat</button>
+        <button data-path="/about">About</button>
+      </div>
+    </nav>
+  `
+}
+
 function renderHome() {
   document.getElementById('app').innerHTML = `
-    <h1>Bienvenido</h1>
-    <p>Chateá con ${personaje}</p>
-    <button data-path="/chat">Ir al chat</button>
-    <button data-path="/about">Sobre el proyecto</button>
+    ${navbar()}
+    <div class="home-container">
+      <h1>IA Chat</h1>
+      <p>Chateá con tus personajes favoritos usando inteligencia artificial</p>
+      <div class="character-card">
+        <h2>Walter White</h2>
+        <p>Breaking Bad • Químico • El mejor en lo suyo</p>
+      </div>
+      <button class="btn-primary" data-path="/chat">Empezar a chatear</button>
+    </div>
   `
 }
 
@@ -25,20 +44,20 @@ function renderChat() {
     </div>
   `
   renderMensaje()
+
+  document.getElementById('user-input').addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') sendMessage()
+  })
 }
 
 function renderMensaje() {
   const container = document.getElementById('messages')
   container.innerHTML = mensaje.map(msg => `
-    <div class="message ${msg.role}">
+    <div class="message ${msg.role} ${msg.content === '...' ? 'typing' : ''}">
       <p>${msg.content}</p>
     </div>
   `).join('')
   container.scrollTop = container.scrollHeight
-  
-document.getElementById('user-input').addEventListener('keypress', (e) => {
-  if (e.key === 'Enter') sendMessage()
-})
 }
 
 async function sendMessage() {
@@ -53,17 +72,16 @@ async function sendMessage() {
   mensaje.push({ role: 'assistant', content: '...' })
   renderMensaje()
 
-try {
-  const mensajesLimpios = mensaje.filter(m => m.content !== '...')
-  
-  const response = await fetch('/api/functions', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ messages: mensajesLimpios })
-  })
+  try {
+    const mensajesLimpios = mensaje.filter(m => m.content !== '...')
+
+    const response = await fetch('/api/functions', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ messages: mensajesLimpios })
+    })
 
     const data = await response.json()
-    
     mensaje[mensaje.length - 1].content = data.content
     renderMensaje()
 
@@ -71,6 +89,18 @@ try {
     mensaje[mensaje.length - 1].content = 'Error al conectar con la IA.'
     renderMensaje()
   }
+}
+
+function renderAbout() {
+  document.getElementById('app').innerHTML = `
+    ${navbar()}
+    <div class="about-container">
+      <h1>Sobre el proyecto</h1>
+      <p>ComicSansCon Chat es una aplicación donde podés chatear con personajes ficticios usando inteligencia artificial.</p>
+      <p>Los personajes disponibles son Walter White, Jack Sparrow y Sherlock Holmes.</p>
+      <p>Hecho por Ezequiel Molinari</p>
+    </div>
+  `
 }
 
 function navigateTo(path) {
@@ -87,15 +117,6 @@ function renderRoute() {
   } else {
     renderHome()
   }
-}
-
-function renderAbout() {
-  document.getElementById('app').innerHTML = `
-    <h1>Chat de IA Con Diferentes Personajes</h1>
-    <h2>Chateá con Walter White - Jack Sparrow - Sherlock Holmes</h2>
-    <p>By Ezequiel Molinari</p>
-    <button data-path="/home">Volver al inicio</button>
-  `
 }
 
 document.getElementById('app').addEventListener('click', (event) => {
