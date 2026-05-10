@@ -1,6 +1,7 @@
 {
-  "rewrites": [
-    { "source": "/api/(.*)", "destination": "/api/functions.js" },
-    { "source": "/((?!src/).*)", "destination": "/src/index.html" }
+  "routes": [
+    { "src": "/api/(.*)", "dest": "/api/functions.js" },
+    { "src": "/src/(.*)", "dest": "/src/$1" },
+    { "src": "/(.*)", "dest": "/src/index.html" }
   ]
 }
