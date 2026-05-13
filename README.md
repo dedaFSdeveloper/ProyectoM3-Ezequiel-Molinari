@@ -36,12 +36,12 @@ https://proyecto-m3-ezequiel-molinari-ycvj.vercel.app/
 
 ### Uso de IA en el desarrollo
 
-![Consulta 1](documentacion IA/1.png)
-![Consulta 1 continuación](documentacion IA/1.2.png)
-![Consulta 2](documentacion IA/2.png)
-![Consulta 3](documentacion IA/3.png)
-![Consulta 4](documentacion IA/4.png)
-![Consulta 4 continuación](documentacion IA/4.1.png)
-![Consulta 5](documentacion IA/5.png)
-![Consulta 5 continuación](documentacion IA/5.1.png)
-![Consulta 6](documentacion IA/6.png)
+![Consulta 1](documentacion-IA/1.png)
+![Consulta 1 continuación](documentacion-IA/1.2.png)
+![Consulta 2](documentacion-IA/2.png)
+![Consulta 3](documentacion-IA/3.png)
+![Consulta 4](documentacion-IA/4.png)
+![Consulta 4 continuación](documentacion-IA/4.1.png)
+![Consulta 5](documentacion-IA/5.png)
+![Consulta 5 continuación](documentacion-IA/5.1.png)
+![Consulta 6](documentacion-IA/6.png)
