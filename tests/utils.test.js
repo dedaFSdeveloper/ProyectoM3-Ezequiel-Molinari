@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, vi } from 'vitest'
 import { formatMessage, isEmptyMessage, parseAIResponse, limitMessages } from '../src/utils.js'
 
 describe('formatMessage', () => {
@@ -35,5 +35,30 @@ describe('limitMessages', () => {
   it('debe limitar el historial a 20 mensajes', () => {
     const msgs = Array.from({ length: 25 }, (_, i) => ({ role: 'user', content: `msg ${i}` }))
     expect(limitMessages(msgs).length).toBe(20)
+  })
+})
+
+describe('fetch mock', () => {
+  it('simula llamada a la API y devuelve respuesta correcta', async () => {
+    const fetchMock = vi.fn().mockResolvedValue({
+      json: async () => ({ content: 'Soy Walter White' })
+    })
+
+    const response = await fetchMock('/api/functions', {
+      method: 'POST',
+      body: JSON.stringify({ messages: [], prompt: 'test' })
+    })
+    const data = await response.json()
+
+    expect(fetchMock).toHaveBeenCalledTimes(1)
+    expect(fetchMock).toHaveBeenCalledWith('/api/functions', expect.objectContaining({ method: 'POST' }))
+    expect(data.content).toBe('Soy Walter White')
+  })
+
+  it('simula error de la API correctamente', async () => {
+    const fetchMock = vi.fn().mockRejectedValue(new Error('Network error'))
+
+    await expect(fetchMock('/api/functions')).rejects.toThrow('Network error')
+    expect(fetchMock).toHaveBeenCalledTimes(1)
   })
 })
