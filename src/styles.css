@@ -317,3 +317,14 @@ nav button:hover {
   0%, 60%, 100% { transform: translateY(0); }
   30% { transform: translateY(-6px); }
 }
+
+#clear-btn {
+  padding: 8px 12px;
+  background: transparent;
+  color: #999;
+  border: 1px solid #ccc;
+  border-radius: 16px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  font-family: var(--font);
+}
